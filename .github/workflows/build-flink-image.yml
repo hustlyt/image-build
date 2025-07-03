@@ -2,8 +2,8 @@ name: Build and Save Flink Docker Image
 
 on:
   push:
-    branches: [ main ]   # 在main分支推送时触发
-  workflow_dispatch:     # 允许手动触发
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-and-save:
@@ -22,9 +22,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile  # 使用仓库根目录的Dockerfile
-          tags: flink:1.17.2-scala_2.12-java8-python  # 使用指定的镜像名称和标签
-          load: true  # 将镜像加载到本地，以便后续保存为文件
+          file: Dockerfile
+          tags: flink:1.17.2-scala_2.12-java8-python
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -32,18 +32,18 @@ jobs:
       - name: Save Docker image
         run: |
           docker save -o flink-image.tar flink:1.17.2-scala_2.12-java8-python
-          du -sh flink-image.tar  # 显示文件大小
+          du -sh flink-image.tar
 
-      # 5. 压缩镜像文件（减少上传大小）
+      # 5. 压缩镜像文件
       - name: Compress image
         run: |
           gzip flink-image.tar
           ls -lh flink-image.tar.gz
 
-      # 6. 上传为可下载的产物
+      # 6. 上传为可下载的产物 (使用最新的 v4 版本)
       - name: Upload Docker image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # 更新到 v4 版本
         with:
           name: flink-docker-image
           path: flink-image.tar.gz
-          retention-days: 3  # 产物保留3天
+          retention-days: 3
