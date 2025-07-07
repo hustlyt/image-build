@@ -28,12 +28,15 @@ jobs:
 
     - name: Download packages
       run: |
+        # 转换版本格式 (3.10 -> 310)
+        PY_VER=$(echo "${{ matrix.python-version }}" | tr -d '.')
+        
         python -m pip download \
           -r requirements.txt \
           -d offline_packages_${{ matrix.python-version }} \
           --no-binary=:all: \
           --platform manylinux2014_x86_64 \
-          --python-version ${{ replace(matrix.python-version, '.', '') }} \
+          --python-version $PY_VER \
           --implementation cp \
           --only-binary=:none:
 
