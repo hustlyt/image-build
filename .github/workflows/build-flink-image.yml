@@ -3,6 +3,8 @@ name: Build and Save Flink Docker Image
 on:
   push:
     branches: [ main ]
+    paths: 
+      - 'Dockerfile'  # 仅当Dockerfile变化时触发
   workflow_dispatch:
 
 jobs:
