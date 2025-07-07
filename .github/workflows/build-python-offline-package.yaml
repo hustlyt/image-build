@@ -1,0 +1,50 @@
+name: Build Offline Python Packages
+
+on:
+  workflow_dispatch:  # 手动触发
+  push:
+    branches: [ main ]
+    paths: 
+      - 'requirements.txt'  # 仅当requirements.txt变化时触发
+
+jobs:
+  build-offline-packages:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']  # 支持多Python版本
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Create artifacts directory
+      run: mkdir -p offline_packages_${{ matrix.python-version }}
+
+    - name: Download packages
+      run: |
+        python -m pip download \
+          -r requirements.txt \
+          -d offline_packages_${{ matrix.python-version }} \
+          --no-binary=:all: \
+          --platform manylinux2014_x86_64 \
+          --python-version ${{ matrix.python-version | replace('.', '') }} \
+          --implementation cp \
+          --only-binary=:none:
+
+    - name: Archive offline packages
+      run: |
+        tar -czvf python-${{ matrix.python-version }}-offline-packages.tar.gz \
+            -C offline_packages_${{ matrix.python-version }} .
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-${{ matrix.python-version }}-offline-packages
+        path: python-${{ matrix.python-version }}-offline-packages.tar.gz
+        retention-days: 7
