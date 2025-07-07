@@ -33,7 +33,7 @@ jobs:
           -d offline_packages_${{ matrix.python-version }} \
           --no-binary=:all: \
           --platform manylinux2014_x86_64 \
-          --python-version ${{ matrix.python-version | replace('.', '') }} \
+          --python-version ${{ replace(matrix.python-version, '.', '') }} \
           --implementation cp \
           --only-binary=:none:
 
