@@ -37,7 +37,6 @@ jobs:
           --only-binary=:all: \
           --no-cache-dir \
           --prefer-binary \
-          --platform manylinux2014_x86_64 \
           --python-version $PY_VER \
           --implementation cp 
           
