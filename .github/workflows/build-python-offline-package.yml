@@ -34,12 +34,13 @@ jobs:
         python -m pip download \
           -r requirements.txt \
           -d offline_packages_${{ matrix.python-version }} \
-          --no-binary=:all: \
+          --only-binary=:all: \
+          --no-cache-dir \
+          --prefer-binary \
           --platform manylinux2014_x86_64 \
           --python-version $PY_VER \
-          --implementation cp \
-          --only-binary=:none:
-
+          --implementation cp 
+          
     - name: Archive offline packages
       run: |
         tar -czvf python-${{ matrix.python-version }}-offline-packages.tar.gz \
