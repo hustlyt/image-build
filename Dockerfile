@@ -14,4 +14,5 @@ RUN pip3 install --no-cache-dir \
     pymysql==0.10.1 \
     mysql-connector-python==8.0.29 \
     neo4j==5.28.1 \
-    apache-iotdb==1.3.4
+    apache-iotdb==1.3.4 \
+    redis==5.3.0
