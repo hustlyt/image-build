@@ -30,7 +30,6 @@ jobs:
       run: |
         # 转换版本格式 (3.10 -> 310)
         PY_VER=$(echo "${{ matrix.python-version }}" | tr -d '.')
-        python -m pip install pysftp==
         python -m pip download \
           -r requirements.txt \
           -d offline_packages_${{ matrix.python-version }} \
